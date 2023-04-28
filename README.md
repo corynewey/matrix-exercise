@@ -17,7 +17,7 @@ Little thought was put into performance improvements. Almost always, it is bette
 * Clone this repository
 * Build the executable jar witht the command `mvn clean package`.
 * Run the application with this command line `java -jar target/matrix-exercise-1.0-SNAPSHOT.jar`.
-* Invoking the application with parameters, as shown above, will cause the application to print `Usage` instructions.
+* Invoking the application without the required arguments, as shown above, will cause the application to print `Usage` instructions.
 * Accepted command-line arguments are
   * -dimensions (required) followed by the desired matrix rows and columns
   * -numZeroes (optional) followed by the number of zeroes that should be initially populated in the matrix. Note: the initial zeroes are randomly populated into the matrix.
