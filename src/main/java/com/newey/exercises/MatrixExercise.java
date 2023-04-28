@@ -1,8 +1,10 @@
 package com.newey.exercises;
 
+import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Arrays;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,20 +25,67 @@ public class MatrixExercise {
         initializeMatrix();
         int requestedZeroes = numZeroes > 0 ? numZeroes : DEFAULT_NUMBER_OF_ZEROES;
         // Generate random indexes where the zeroes will be put.
+        Set<Point> zeroPoints = generateRandomPoints(requestedZeroes, columns, rows);
+        for (Point zeroPoint : zeroPoints) {
+            matrix[zeroPoint.y][zeroPoint.x] = "0";
+        }
+    }
+
+    public void zeroRowsAndColumns() {
+        // Walk the matrix and zero out the row and column of any zero that is seen.
+        for (int y=0; y<rows; y++) {
+            for (int x=0; x<columns; x++) {
+                if ("0".equals(matrix[y][x])) {
+                    zeroOutRowColumn(x, y);
+                }
+            }
+        }
+    }
+
+    public String[][] getMatrix() {
+        return matrix;
+    }
+
+    /**
+     * Use a set to hold the random points so that we guarantee that we have the number of desired unique points.
+     *
+     * @param numPoints desired number of points
+     * @param maxX      maximum x coordinate value
+     * @param maxY      maximum y coordinate value
+     * @return  Set of random points objects
+     */
+    private Set<Point> generateRandomPoints(int numPoints, int maxX, int maxY) {
+        Set<Point> points = new HashSet<>();
+        while (points.size() < numPoints) {
+            points.add(Point.builder().x(getRandomIndex(0, maxX)).y(getRandomIndex(0, maxY)).build());
+        }
+        return points;
+    }
+
+    private int getRandomIndex(int min, int max) {
+        return (int) ((Math.random() * (max - min)) + min);
     }
 
     private void initializeMatrix() {
         matrix = new String[rows][columns];
         // Populate the matrix with 'X'.
         for (int i=0; i<rows; i++) {
-            for (int j=0; j<columns; j++) {
-                matrix[i][j] = "X";
-            }
+            Arrays.fill(matrix[i], "X");
         }
     }
 
-    public void printMatrix() {
-        System.out.println("****** Generated Matrix ******");
+    private void zeroOutRowColumn(int x, int y) {
+        // ToDo: validate x and y; assure they are valid coordinates.
+        // Zero-out column.
+        for (String[] row : matrix) {
+            row[x] = "0";
+        }
+        // Zero-out row.
+        Arrays.fill(matrix[y], "0");
+    }
+
+    public void printMatrix(String header) {
+        System.out.println(header);
         for (String[] rows : matrix) {
             System.out.println(String.join(", ", rows));
         }
@@ -71,7 +120,9 @@ public class MatrixExercise {
         if (columns > 0 && rows > 0) {
             MatrixExercise matrixExercise = new MatrixExercise(rows, columns, numZeroes);
             matrixExercise.generateMatrix();
-            matrixExercise.printMatrix();
+            matrixExercise.printMatrix("****** Initially-Generated Matrix ******");
+            matrixExercise.zeroRowsAndColumns();
+            matrixExercise.printMatrix("****** Final Matrix ******");
             return;
         }
         printUsage();
@@ -83,5 +134,26 @@ public class MatrixExercise {
                                     -- where rows (required) is number of matrix rows
                                     -- where cols (required) is number of matrix columns
                                     -- where cnt (optional) is number of zeroes to seed the matrix with (defaults to two)""");
+    }
+
+    @RequiredArgsConstructor
+    @Builder
+    @Getter
+    private static class Point {
+        private final int x;
+        private final int y;
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof Point point) {
+                return x == point.getX() && y == point.getY();
+            }
+            return false;
+        }
     }
 }
