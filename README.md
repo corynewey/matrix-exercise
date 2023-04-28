@@ -23,7 +23,7 @@ Little thought was put into performance improvements. Almost always, it is bette
   * -numZeroes (optional) followed by the number of zeroes that should be initially populated in the matrix. Note: the initial zeroes are randomly populated into the matrix.
 
 # Examples
-To run the application with a 7 x 8 matrix with 3 initial zeroes use this command line to run the application
+To run the application with a 7 x 8 matrix with 3 initial zeroes use, your command line should look something like this:
 > java -jar target/matrix-exercise-1.0-SNAPSHOT.jar -dimensions 7 8 -numZeroes 3
 
 When the application runs, it will print out the initially-generated matrix with the zeroes randomly placed in the matrix and then it will print the final matrix with the elements' rows/columns zeroed-out.
@@ -31,5 +31,5 @@ When the application runs, it will print out the initially-generated matrix with
 # Improvements
 Along with possible performance improvements, the below improvements could be made:
 * Validation. There is very little validation going on, outside of assuring that the command line parameters are integers.
-* Testing and Testability. While there is a unit test class defined, it doesn't perform very stringent testing. In order to improve testing, the application would need some refactoring. Testability could be improved by decomposing the matrix and separating supporting logic into other classes.
+* Testing and Testability. While there is a unit test class defined, it doesn't perform very stringent testing. In order to improve testing, the application would need some refactoring. Testability could be improved by decomposing the matrix class and separating supporting logic into other classes.
 
