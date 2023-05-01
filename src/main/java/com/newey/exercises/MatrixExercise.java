@@ -5,39 +5,43 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public class MatrixExercise {
 
     private static final String DIMENSION_PARM = "-dimensions";
     private static final String ZERO_COUNT_PARM = "-numZeroes";
+    private static final String DEBUG_MODE_PARM = "-debug";
 
     private static final int DEFAULT_NUMBER_OF_ZEROES = 2;
 
     private final int rows;
     private final int columns;
     private final int numZeroes;
-    private String[][]  matrix;
+    private final boolean isDebugMode;
+    private String[][] matrix;
+    private Set<Point> zeroPoints;
 
     public void generateMatrix() {
         initializeMatrix();
         int requestedZeroes = numZeroes > 0 ? numZeroes : DEFAULT_NUMBER_OF_ZEROES;
         // Generate random indexes where the zeroes will be put.
-        Set<Point> zeroPoints = generateRandomPoints(requestedZeroes, columns, rows);
+        zeroPoints = generateRandomPoints(requestedZeroes, columns, rows);
+        // And set the corresponding cells in the matrix.
         for (Point zeroPoint : zeroPoints) {
             matrix[zeroPoint.y][zeroPoint.x] = "0";
         }
     }
 
     public void zeroRowsAndColumns() {
-        // Walk the matrix and zero out the row and column of any zero that is seen.
-        for (int y=0; y<rows; y++) {
-            for (int x=0; x<columns; x++) {
-                if ("0".equals(matrix[y][x])) {
-                    zeroOutRowColumn(x, y);
-                }
+        if (isDebugMode) {
+            printMatrix("@@@@ Iterating through zero points. Original Matrix (debug) @@@@");
+        }
+        for (Point zeroPoint : zeroPoints) {
+            zeroOutRowColumn(zeroPoint.x, zeroPoint.y);
+            if (isDebugMode) {
+                System.out.println("Zeroing-out row: " + (zeroPoint.y + 1) + " and column: " + (zeroPoint.x + 1));
+                printMatrix("***** Intermediate Matrix (debug) *****");
             }
         }
     }
@@ -95,6 +99,7 @@ public class MatrixExercise {
         int columns = -1;
         int rows = -1;
         int numZeroes = -1;
+        boolean isDebugMode = false;
 
         if (args.length > 0) {
             try {
@@ -108,6 +113,9 @@ public class MatrixExercise {
                     } else if (ZERO_COUNT_PARM.equals(arg)) {
                         numZeroes = Integer.parseInt(args[++idx]);
                         continue;
+                    } else if (DEBUG_MODE_PARM.equals(arg)) {
+                        isDebugMode = true;
+                        continue;
                     }
                     break;
                 }
@@ -118,7 +126,7 @@ public class MatrixExercise {
             }
         }
         if (columns > 0 && rows > 0) {
-            MatrixExercise matrixExercise = new MatrixExercise(rows, columns, numZeroes);
+            MatrixExercise matrixExercise = new MatrixExercise(rows, columns, numZeroes, isDebugMode);
             matrixExercise.generateMatrix();
             matrixExercise.printMatrix("****** Initially-Generated Matrix ******");
             matrixExercise.zeroRowsAndColumns();
@@ -130,10 +138,11 @@ public class MatrixExercise {
 
     private static void printUsage() {
         System.out.println("""
-                                   Usage: java -jar target/matrix-exercise-1.0-SNAPSHOT.jar -dimensions [rows] [cols] -numZeroes [cnt]\s
+                                   Usage: java -jar target/matrix-exercise-1.0-SNAPSHOT.jar -dimensions [rows] [cols] -numZeroes [cnt] -debug\s
                                     -- where rows (required) is number of matrix rows
                                     -- where cols (required) is number of matrix columns
-                                    -- where cnt (optional) is number of zeroes to seed the matrix with (defaults to two)""");
+                                    -- where cnt (optional) is number of zeroes to seed the matrix with (defaults to two)
+                                    -- if -debug is included, debug mode is enabled""");
     }
 
     @RequiredArgsConstructor

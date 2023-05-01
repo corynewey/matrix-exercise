@@ -33,3 +33,10 @@ Along with possible performance improvements, the below improvements could be ma
 * Validation. There is very little validation going on, outside of assuring that the command line parameters are integers.
 * Testing and Testability. While there is a unit test class defined, it doesn't perform very stringent testing. In order to improve testing, the application would need some refactoring. Testability could be improved by decomposing the matrix class and separating supporting logic into other classes.
 
+# Addendum
+
+I've been notified that my original interpretition of the requirements was incorrect. Here are the clarified requirements that I have received:
+
+> My intent in the requirement is to zero out the row and column of those indices (and only those indices) that are initially '0'.
+
+With my better understanding of the requiremenst, I've refactored the code. While changing the application to only zero-out the rows/columns of the original '0' cells, I've refactored the method that performs that function such that it no longer walks the matrix, looking for zeroes. Instead, it iterates through the list of '0' cells and zeroes-out the corresponding rows and columns. This new algorithm is more performant than the original one since it only has to consider the list of requested '0' cells instead of each cell in the matrix.

@@ -15,11 +15,11 @@ public class MatrixExerciseTest
      */
     @Test
     public void shouldTestMatrix() {
-        MatrixExercise matrixExercise = new MatrixExercise(7, 7, 3);
+        MatrixExercise matrixExercise = new MatrixExercise(7, 7, 1, false);
         matrixExercise.generateMatrix();
-        assertEquals(3, countZeroes(matrixExercise.getMatrix()));
+        assertEquals(1, countZeroes(matrixExercise.getMatrix()));
         matrixExercise.zeroRowsAndColumns();
-        assertTrue(countZeroes(matrixExercise.getMatrix()) > 3);
+        assertTrue(countZeroes(matrixExercise.getMatrix()) > 1);
     }
 
     private int countZeroes(String[][] matrix) {
